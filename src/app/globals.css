@@ -67,3 +67,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.blur-image {
+  filter: blur(3px); /* Adjust the blur radius as needed */
+}
