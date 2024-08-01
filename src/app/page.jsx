@@ -76,7 +76,7 @@ export default function Home() {
 
             {/* Form */}
             <div className="w-1/2">
-            <Regi>`</Regi>
+            <Regi>` </Regi>
             </div>
           </div>
 

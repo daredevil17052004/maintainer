@@ -8,8 +8,5 @@ export const dbConnect = async () => {
         return;
     }
 
-    return mongoose.connect(MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    }); 
+    return mongoose.connect(MONGO_URI); 
 };

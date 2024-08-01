@@ -1,3 +1,4 @@
+"use server"
 import { NextResponse } from "next/server";
 import { User } from "@/model/UserModel";
 import bcrypt from "bcryptjs";

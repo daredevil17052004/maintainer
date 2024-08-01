@@ -24,7 +24,6 @@ export async function doCredentialLogin(credentials) {
             email:email,
             password:password,
         });
-        console.log('asdasdas',response)
         return response;
     } catch (error) {
         console.error("Error during credential login:", error);

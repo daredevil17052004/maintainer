@@ -11,11 +11,8 @@ import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 import Logout from '@/components/Logout'
 
-const page = async() => {
+const page = () => {
 
-  const session = await auth()
-
-  if(!session?.user) redirect("/")
 
   return (
     <div>
@@ -23,15 +20,6 @@ const page = async() => {
 
 
         <NavigationBar />
-
-
-      <div>
-        {session?.user?.name}
-        <Image src={session?.user?.image} width={100} height={100}/>
-        <Logout/>
-      </div>
-
-
 
         <div className="flex flex-col justify-center items-center my-10 mx-32">
           <div className="text-3xl font-medium">

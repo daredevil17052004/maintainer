@@ -7,7 +7,7 @@ const Regi = () => {
     <>
         <RegistrationForm/>
             <p>Already have an account?</p>
-        <Link href='login'>Login</Link>
+        <Link href='login' className="hover:text-myAccent hover:underline-offset-4 hover:underline transition duration-700">Login</Link>
 
     </>
   )
