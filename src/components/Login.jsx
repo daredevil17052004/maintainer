@@ -42,11 +42,11 @@ const Login = () => {
 
                 <div className="flex flex-col items-start justify-center w-full">
                     <label htmlFor="email" className="py-3">Email</label>
-                    <input type="email" name='email' id="email"  className="w-full h-8 rounded py-3 text-black pl-2"/>
+                    <input type="email" name='email' id="email"  className="w-full h-8 rounded py-3 text-white pl-2 bg-transparent/50"/>
                 </div>
                 <div className="flex flex-col items-start justify-center w-full pb-5">
                     <label htmlFor="password" className="py-3">Password</label>
-                    <input type="password" name='password' id="password" className="w-full h-8 rounded text-black pl-2"/>
+                    <input type="password" name='password' id="password" className="w-full h-8 rounded text-white pl-2 bg-transparent/50"/>
                 </div>
 
                 <Button type='submit' className="w-full" variant='ghost'>Credential login</Button>

@@ -21,7 +21,7 @@ const users = [
 
 export async function getUserByEmail(email) {
     try {
-        const dbConnection = await dbConnect();
+        await dbConnect();
         const found = User.find({ email: email });
         return found;
     } catch (error) {

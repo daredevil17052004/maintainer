@@ -1,20 +1,35 @@
-import React from 'react'
-import NavigationBar from '@/components/NavigationBar'
-import VehicleRegistration from '@/components/VehicleRegistration'
-import { auth } from '@/auth'
-import Expenses from '@/components/Expenses'
+import React from 'react';
+import NavigationBar from '@/components/NavigationBar';
+import VehicleRegistration from '@/components/VehicleRegistration';
+import { auth } from '@/auth';
+import Expenses from '@/components/Expenses';
 
-const page = async() => {
+const Page = async () => {
+  try {
+    const session = await auth();
+ 
+    // Destructure user data from session
+    const { _id: userId, vehicles: vehicleId } = session?.user || {};
 
-  const session = await auth()
-  console.log('session',session?.user)
-  return (
-    <div className="h-screen">
-        <NavigationBar/>
-        <VehicleRegistration userId={session?.user?.id}></VehicleRegistration>
-        <Expenses userId={session?.user?.id} vehicleId={session?.user?.vehicles}/>
-    </div>
-  )
-}
+    // Log session for debugging
+    console.log('session', session);
 
-export default page
+    // Check if userId exists
+    if (!userId) {
+      return <div>Loading...</div>;
+    }
+
+    return (
+      <div className="h-screen">
+        <NavigationBar />
+        <VehicleRegistration userId={userId} />
+        <Expenses userId={userId} vehicleId={vehicleId} />
+      </div>
+    );
+  } catch (error) {
+    console.error('Error fetching session:', error);
+    return <div>Error loading page. Please try again later.</div>;
+  }
+};
+
+export default Page;

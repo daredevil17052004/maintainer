@@ -1,49 +1,59 @@
 "use server"
-import { dbConnect } from "@/lib/mongo"
+
+import { dbConnect } from "@/lib/mongo";
 import { User } from "@/model/UserModel";
-import Vehicle from "@/model/VehicleModel.js";
-import req from "express/lib/request";
+import Vehicle from "@/model/VehicleModel";
 import { NextResponse } from "next/server";
 
-
-
 export async function POST(request) {
-    await dbConnect();
-    console.log('dnasjnjksd')
-    const { userId, make, model, year, vin } = await request.json();
-
     try {
+        await dbConnect();
+        console.log('Processing vehicle registration');
+
+        const { userId, make, model, year, vin } = await request.json();
+
+        if (!userId || !make || !model || !year || !vin) {
+            return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
+        }
+
         const vehicle = new Vehicle({ user: userId, make, model, year, vin });
-        console.log(vehicle)
         await vehicle.save();
 
         const user = await User.findById(userId);
+        if (!user) {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
+
         user.vehicles.push(vehicle._id);
         await user.save();
 
         return NextResponse.json(vehicle, { status: 201 });
     } catch (err) {
-        return NextResponse.json({ error: err.message }, { status: 500 });
+        console.error('Error during vehicle registration:', err);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
 
 export async function GET(request) {
-    await dbConnect();
-
     try {
-        // Extract vehicle IDs from query parameters
+        await dbConnect();
+
         const url = new URL(request.url);
         const vehicleIds = url.searchParams.getAll('vehicleIds[]');
-        console.log(vehicleIds)
+
         if (vehicleIds.length === 0) {
             return NextResponse.json({ error: 'Vehicle IDs are required' }, { status: 400 });
         }
 
-        // Fetch vehicles based on IDs
         const vehicles = await Vehicle.find({ _id: { $in: vehicleIds } }).populate('user');
-        
-        return NextResponse.json(vehicles); // Return the fetched vehicle data
+
+        if (!vehicles.length) {
+            return NextResponse.json({ error: 'No vehicles found' }, { status: 404 });
+        }
+
+        return NextResponse.json(vehicles);
     } catch (err) {
-        return NextResponse.json({ error: err.message }, { status: 500 });
+        console.error('Error fetching vehicles:', err);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

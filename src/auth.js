@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { dbConnect } from "./lib/mongo";
 import { User } from "./model/UserModel";
 
+
 export const {
     handlers: { GET, POST },
     auth,
@@ -42,19 +43,18 @@ export const {
         CredentialsProvider({
             async authorize(credentials) {
                 try {
-                    const user = await getUserByEmail(credentials?.email)
+                    const user = await getUserByEmail(credentials?.email);
 
                     if (user[0]) {
-                        const isMatch = await bcrypt.compare(credentials?.password, user[0]?.password)
+                        const isMatch = await bcrypt.compare(credentials?.password, user[0]?.password);
                         if (isMatch) {
-                            console.log("USER", user[0])
                             return {
-                                id: user[0]._id.toString(),
+                                id: user[0]._id,
                                 email: user[0].email,
                                 name: user[0].name,
                                 image: user[0].image,
                                 vehicles: user[0].vehicles
-                            }
+                            };
                         } else {
                             throw new Error("Check your credentials");
                         }
@@ -63,7 +63,7 @@ export const {
                     }
                 } catch (error) {
                     console.error("Error during credential login:", error);
-                    throw new Error("Login failed: " + (error.message || "Unknown error")); // Provide a specific error message
+                    throw new Error("Login failed: " + (error.message || "Unknown error"));
                 }
             }
         })
@@ -71,14 +71,17 @@ export const {
     callbacks: {
         async signIn({ user, account, profile }) {
             await dbConnect();
-
+            user._id = 'ansh'
             try {
                 let existingUser;
-
                 if (account.provider === "google") {
-                    existingUser = await User.findOne({ googleId: account.id });
+                    existingUser = await User.findOne({ email: user?.email });
+                    if(existingUser){
+                        user._id = existingUser._id
+                        console.log(existingUser)
+                    }
                 } else if (account.provider === "github") {
-                    existingUser = await User.findOne({ githubId: account.id });
+                    existingUser = await User.findOne({ githubId: account.providerAccountId });
                 } else {
                     existingUser = await User.findOne({ email: user.email });
                 }
@@ -90,32 +93,33 @@ export const {
                         image: profile.picture || "https://github.com/shadcn.png",
                         googleId: account.provider === "google" ? account.id : undefined,
                         githubId: account.provider === "github" ? account.id : undefined,
-                        password:""
+                        password: ""
                     });
                     await existingUser.save();
                 }
 
-                return true;
+                return existingUser;
             } catch (error) {
                 console.error("Error during signIn callback:", error);
                 return false;
             }
         },
         async jwt({ token, user }) {
-            // Persist user data in the token
             if (user) {
+                console.log('jet',user)
+                token._id = user._id
                 token.id = user.id;
-                token.vehicles = Array.isArray(user.vehicles) ? user.vehicles : []; // Ensure vehicles is an array
+                token.vehicles = Array.isArray(user.vehicles) ? user.vehicles : [];
             }
             return token;
         },
         async session({ session, token }) {
-            // Attach user data to the session
             if (token) {
+                session.user._id = token._id
                 session.user.id = token.id;
-                session.user.vehicles = Array.isArray(token.vehicles) ? token.vehicles : []; // Ensure vehicles is an array
+                session.user.vehicles = Array.isArray(token.vehicles) ? token.vehicles : [];
             }
             return session;
         }
     },
-})
+});
