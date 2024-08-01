@@ -71,7 +71,6 @@ export const {
     callbacks: {
         async signIn({ user, account, profile }) {
             await dbConnect();
-            user._id = 'ansh'
             try {
                 let existingUser;
                 if (account.provider === "google") {
@@ -95,6 +94,7 @@ export const {
                         githubId: account.provider === "github" ? account.id : undefined,
                         password: ""
                     });
+                    user._id = existingUser._id
                     await existingUser.save();
                 }
 

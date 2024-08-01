@@ -1,5 +1,3 @@
-"use server"
-
 import { dbConnect } from "@/lib/mongo";
 import { User } from "@/model/UserModel";
 import Vehicle from "@/model/VehicleModel";
@@ -20,12 +18,14 @@ export async function POST(request) {
         await vehicle.save();
 
         const user = await User.findById(userId);
+
         if (!user) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-        user.vehicles.push(vehicle._id);
+        console.log('Before user save:', user);
         await user.save();
+        console.log('After user save:', await User.findById(userId));
 
         return NextResponse.json(vehicle, { status: 201 });
     } catch (err) {
