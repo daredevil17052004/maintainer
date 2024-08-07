@@ -1,5 +1,5 @@
 "use client"
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from './ui/button'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
@@ -10,56 +10,76 @@ const Expenses = ({ userId, vehicleId }) => {
     const [vehicles, setVehicles] = useState([]);
     const [selectedVehicle, setSelectedVehicle] = useState('');
 
-    useEffect(() => {
-        const fetchVehicles = async () => {
-            try {
-                const res = await axios.get('/api/vehicleRegister', {
-                    params: {
-                        'vehicleIds[]': vehicleId
-                    }
-                });
-                if (res.status === 200) {
-                    setVehicles(res.data);
-                    console.log(res.data);
-                } else {
-                    console.error('Failed to fetch vehicles:', res.status);
-                }
-            } catch (error) {
-                console.error('Error fetching vehicles:', error.message);
+    const fetchVehicles = async () => {
+        try {
+            const res = await axios.get('/api/vehicleRegister', {
+                params: { userId }
+            });
+            if (res.status === 200) {
+                setVehicles(res.data.vehicles);
+                console.log(res.data);
+            } else {
+                console.error('Failed to fetch vehicles:', res.status);
             }
-        };
-    
+        } catch (error) {
+            console.error('Error fetching vehicles:', error.message);
+        }
+    };
+
+    useEffect(() => {
         fetchVehicles();
-    }, [vehicleId]);
-    
+    }, [userId]);
 
     async function handleSubmit(e) {
         e.preventDefault();
 
         try {
-            // Collect form data
             const formData = new FormData(e.currentTarget);
             const amount = formData.get('amount');
             const date = formData.get('date');
             const description = formData.get('description');
-
-            // Make the POST request
-            const res = await axios.post('/api/expenses', { userId, vehicleId: selectedVehicle, amount, date, description }, {
+    
+            console.log("Submitting data:", { userId, vehicleId: selectedVehicle, amount, date, description });
+    
+            const res = await axios.post('/api/expenses', {
+                userId,
+                vehicleId: selectedVehicle,
+                amount,
+                date,
+                description
+            }, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
+    
+            console.log("Response:", res);
+    
 
-            // Handle the response
-            if (res.status === 200) {
-                // Redirect to a success page or dashboard
-                router.push('/profile');
+            if (res.status === 201) {
+                console.log('Response data:', res.data);
+                const { expense, updatedVehicle } = res.data;
+                
+                if (updatedVehicle && updatedVehicle._id) {
+                    setVehicles(prevVehicles => 
+                        prevVehicles.map(vehicle => 
+                            vehicle._id === updatedVehicle._id ? updatedVehicle : vehicle
+                        )
+                    );
+                } else {
+                    console.error('Updated vehicle data is missing or incomplete');
+                    fetchVehicles();
+                }
+
+                alert('Expense registered successfully!');
+                e.currentTarget.reset();
+                setSelectedVehicle('');
             } else {
                 console.error('Failed to register expense:', res.status);
             }
-
         } catch (error) {
             console.error('Error:', error.message);
+            alert('Failed to register expense. Please try again.');
         }
     }
 
@@ -76,8 +96,8 @@ const Expenses = ({ userId, vehicleId }) => {
                         required
                     >
                         <option value="" disabled>Select a vehicle</option>
-                        {vehicles.map((item,index) => (
-                            <option key={index} value={item.make}><p>{item.make}</p><p>{item.model}</p></option>
+                        {vehicles.map((item) => (
+                            <option key={item._id} value={item._id}>{item.make} - {item.model}</option>
                         ))}
                     </select>
                 </div>
@@ -86,7 +106,7 @@ const Expenses = ({ userId, vehicleId }) => {
                         <label htmlFor='amount'>Amount</label>
                     </div>
                     <div>
-                        <Input placeholder="Ex. $500" type="number" name='amount' id="amount" required />
+                        <Input placeholder="Ex. 500" type="number" name='amount' id="amount" required />
                     </div>
                 </div>
                 <div className="my-3">

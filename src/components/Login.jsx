@@ -7,6 +7,7 @@ import { doCredentialLogin } from '@/app/actions'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import LoginButtons from './LoginButtons'
+import Link from 'next/link'
 
 const Login = () => {
 
@@ -53,7 +54,14 @@ const Login = () => {
 
             </form>
 
+            <div className="pt-6">
             <LoginButtons />
+            </div>
+
+            <div className='flex flex-col items-start mt-3'>
+                <p>Don't have an Account?</p>
+                <Link href='/register' className="text-myAccent hover:underline hover:underline-offset-8 transition duration-700">Register</Link>
+            </div>
         </div>
     )
 }

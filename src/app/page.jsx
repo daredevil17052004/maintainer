@@ -17,13 +17,13 @@ import Footer from "../components/Footer";
 import Service from "../components/Service";
 import BoxReveal from "../components/BoxReval";
 import Link from "next/link";
-import Regi from "./register/page";
+import RegistrationForm from "@/components/RegistrationForm";
 
 export default function Home() {
 
   const darkMode = () => {
 
-  
+
   }
 
 
@@ -76,7 +76,9 @@ export default function Home() {
 
             {/* Form */}
             <div className="w-1/2">
-            <Regi>` </Regi>
+              <RegistrationForm />
+              <p>Already have an account?</p>
+              <Link href='login' className="hover:text-myAccent hover:underline-offset-4 hover:underline transition duration-700">Login</Link>
             </div>
           </div>
 

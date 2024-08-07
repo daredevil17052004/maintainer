@@ -16,7 +16,7 @@ const VehicleRegistration = ({ userId }) => {
   console.log('User ID:', userId);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+
 
     try {
       // Collect form data

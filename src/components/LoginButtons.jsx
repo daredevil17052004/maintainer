@@ -4,7 +4,7 @@ import Image from "next/image"
 
 const LoginButtons = () => {
     return (
-        <form action={doSocialLogin} className="pt-10 w-[300px] flex flex-col justify-between ">
+        <form action={doSocialLogin} className=" w-[300px] flex flex-col justify-between ">
             <div className="py-3 w-full">
                 <Button className=" text-white w-full border border-myAccent bg-transparent" variant='ghost' value='google' name='action' type='submit'>
                     <div className="flex items-center justify-evenly  w-3/4">

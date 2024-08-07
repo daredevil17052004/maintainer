@@ -77,6 +77,7 @@ export const {
                     existingUser = await User.findOne({ email: user?.email });
                     if(existingUser){
                         user._id = existingUser._id
+                        user.vehicles = existingUser.vehicles
                         console.log(existingUser)
                     }
                 } else if (account.provider === "github") {
@@ -95,6 +96,7 @@ export const {
                         password: ""
                     });
                     user._id = existingUser._id
+                    user.vehicles = existingUser.vehicles
                     await existingUser.save();
                 }
 
@@ -107,6 +109,7 @@ export const {
         async jwt({ token, user }) {
             if (user) {
                 console.log('jet',user)
+                token.vehicles = user.vehicles
                 token._id = user._id
                 token.id = user.id;
                 token.vehicles = Array.isArray(user.vehicles) ? user.vehicles : [];
@@ -115,6 +118,7 @@ export const {
         },
         async session({ session, token }) {
             if (token) {
+                session.user.vehicles = token.vehicles
                 session.user._id = token._id
                 session.user.id = token.id;
                 session.user.vehicles = Array.isArray(token.vehicles) ? token.vehicles : [];

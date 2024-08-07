@@ -2,6 +2,7 @@ import { dbConnect } from "@/lib/mongo";
 import { User } from "@/model/UserModel";
 import Vehicle from "@/model/VehicleModel";
 import { NextResponse } from "next/server";
+import { userVehiclesInSession } from "@/app/dashboard/page";
 
 export async function POST(request) {
     try {
@@ -17,15 +18,18 @@ export async function POST(request) {
         const vehicle = new Vehicle({ user: userId, make, model, year, vin });
         await vehicle.save();
 
+        // Fetch the user from the database
         const user = await User.findById(userId);
-
         if (!user) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-        console.log('Before user save:', user);
+        // Update user's vehicle list
+        user.vehicles.push(vehicle._id);
+
+        userVehiclesInSession.push(vehicle._id)
+        console.log('userVehicleInSession',userVehiclesInSession)
         await user.save();
-        console.log('After user save:', await User.findById(userId));
 
         return NextResponse.json(vehicle, { status: 201 });
     } catch (err) {
@@ -39,21 +43,21 @@ export async function GET(request) {
         await dbConnect();
 
         const url = new URL(request.url);
-        const vehicleIds = url.searchParams.getAll('vehicleIds[]');
+        const userId = url.searchParams.get('userId');
 
-        if (vehicleIds.length === 0) {
-            return NextResponse.json({ error: 'Vehicle IDs are required' }, { status: 400 });
+        if (!userId) {
+            return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
         }
 
-        const vehicles = await Vehicle.find({ _id: { $in: vehicleIds } }).populate('user');
+        const user = await User.findById(userId).populate('vehicles');
 
-        if (!vehicles.length) {
-            return NextResponse.json({ error: 'No vehicles found' }, { status: 404 });
+        if (!user) {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-        return NextResponse.json(vehicles);
+        return NextResponse.json({ vehicles: user.vehicles });
     } catch (err) {
-        console.error('Error fetching vehicles:', err);
+        console.error('Error fetching user vehicles:', err);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

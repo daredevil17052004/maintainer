@@ -23,6 +23,10 @@ const VehicleSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    expenses: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Expense"
+    }]
 });
 
 // Check if the model is already defined

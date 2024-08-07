@@ -23,11 +23,12 @@ const NavigationBar = async() => {
             <div>
                 <h1 className="font-bold text-xl"><Link href='/'>Maintainer</Link></h1>
             </div>
-            <div className='flex justify-between w-[400px]'>
+            <div className='flex justify-between w-[450px]'>
                 <CustomLink href="/services" title='Services' />
                 <CustomLink href="/pricing" title='Pricing' />
                 <CustomLink href="/about" title='About Us' />
                 <CustomLink href="/contact" title='Contact us' />
+                <CustomLink href="/dashboard" title='Dashboard' /> 
             </div>
             {session ? (
                 <ProfileMenu user={session.user}/>
