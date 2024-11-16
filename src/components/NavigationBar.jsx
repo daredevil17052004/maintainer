@@ -28,7 +28,7 @@ const NavigationBar = async() => {
                 <CustomLink href="/pricing" title='Pricing' />
                 <CustomLink href="/about" title='About Us' />
                 <CustomLink href="/contact" title='Contact us' />
-                <CustomLink href="/dashboard" title='Dashboard' /> 
+                {/* <CustomLink href="/dashboard" title='Dashboard' />  */}
             </div>
             {session ? (
                 <ProfileMenu user={session.user}/>
