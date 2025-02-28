@@ -19,35 +19,35 @@ const page = () => {
         '/cars7.jpg',
     ];
 
-    const router = useRouter();
+        const router = useRouter();
 
 
-    async function handleSubmit(e, router) {
-        e.preventDefault();
+        async function handleSubmit(e, router) {
+            e.preventDefault();
 
-        try {
-            const formData = new FormData(e.currentTarget);
+            try {
+                const formData = new FormData(e.currentTarget);
 
-            const name = formData.get('name');
-            const email = formData.get('email')
-            const password = formData.get('password')
+                const name = formData.get('name');
+                const email = formData.get('email')
+                const password = formData.get('password')
 
-            const res = await axios.post('/api/register', { name, email, password }, {
-                headers: {
-                    'Content-Type': 'application/json'
+                const res = await axios.post('/api/register', { name, email, password }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+
+                console.log('THE RESULT IS HERE', res.status)
+
+                if (res.status == 201) {
+                    router.push('/login')
                 }
-            })
 
-            console.log('THE RESULT IS HERE', res.status)
-
-            if (res.status == 201) {
-                router.push('/login')
+            } catch (error) {
+                console.error(error.message)
             }
-
-        } catch (error) {
-            console.error(error.message)
         }
-    }
     return (
         <ImagesSlider className="h-screen" images={images}>
             <motion.div
@@ -84,7 +84,7 @@ const page = () => {
                                 </div>
                                 <div className="w-full">
                                     <Input placeholder="Ex. abc@gmail.com" type="email" name='email' id="email" className="w-full border-transparent rounded py-3 text-white pl-2 bg-transparent/50" />
-                                </div>
+                                   </div>
                             </div>
                             <div className="my-3 flex flex-col items-start justify-center w-full">
                                 <div className="mb-1">

@@ -19,7 +19,7 @@ const NavigationBar = async() => {
     const session = await auth()
     console.log(session?.user)
     return (
-        <div className="flex justify-around h-24 items-center">
+        <div className="flex justify-around h-20 items-center">
             <div>
                 <h1 className="font-bold text-xl"><Link href='/'>Maintainer</Link></h1>
             </div>

@@ -12,7 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import FAQ from "@/assets/FAQ";
+import FAQ from "@/assets/FAQ"; 
 import Footer from "../components/Footer";
 import Service from "../components/Service";
 import BoxReveal from "../components/BoxReval";
@@ -32,8 +32,8 @@ export default function Home() {
       <BoxReveal boxColor="#E33665">
         <NavigationBar />
 
-        <div className="bg-myBackground h-screen w-full mb-16">
-          <div className="mx-32 flex justify-between h-[500px] items-center">
+        <div className="bg-myBackground h-screen w-full pb-16 flex flex-col justify-between">
+          <div className="mx-32 flex justify-between h-[500px]  items-center">
             {/* Review Section */}
             <div className="w-1/2">
               <div className="my-3 font-semibold">
