@@ -24,7 +24,7 @@ export const {
             authorization: {
                 params: {
                     prompt: "consent",
-                    access_type: "offline",
+                    access_type: "online",
                     response_type: 'code',
                 }
             }
@@ -127,3 +127,4 @@ export const {
         }
     },
 });
+PerformanceNavigationTiming
