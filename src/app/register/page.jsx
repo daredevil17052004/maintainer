@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import LoginButtons from "@/components/LoginButtons";
 import Link from "next/link";
+import axios from "axios";
 
 const page = () => {
     const images = [
