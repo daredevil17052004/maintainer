@@ -20,7 +20,8 @@ const Login = () => {
             const formData = new FormData(event.currentTarget)
             console.log('FormData:', Object.fromEntries(formData));
             const response = await doCredentialLogin(formData)
-            if (response == "http://localhost:3000/login"){
+            console.log(response)
+            if (response == "http://localhost:3000/login || https://maintainer-next.netlify.app/login || https://maintainer-bs21zl7nc-daredevil17052004s-projects.vercel.app/login"){
                 router.push('/')
             }else{
                 throw new Error("Check your credentails")

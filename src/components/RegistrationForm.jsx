@@ -13,7 +13,7 @@ const RegistrationForm = () => {
 
 
     async function handleSubmit(e, router) {
-        e.preventDefault();
+    e.preventDefault();
 
         try {
             const formData = new FormData(e.currentTarget);
